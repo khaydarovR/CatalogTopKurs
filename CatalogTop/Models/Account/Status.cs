@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CatalogTop.Models
+namespace CatalogTop.Models.Account
 {
     public partial class Status
     {

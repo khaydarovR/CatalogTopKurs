@@ -15,12 +15,4 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\" />
-    <Folder Include="Areas\Account\Controllers\" />
-    <Folder Include="Areas\Account\Data\" />
-    <Folder Include="Areas\Account\Models\" />
-    <Folder Include="Areas\Account\Views\" />
-  </ItemGroup>
-
 </Project>

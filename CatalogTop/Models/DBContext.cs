@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using CatalogTop.Models.Account;
+using CatalogTop.Models.Sort;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 

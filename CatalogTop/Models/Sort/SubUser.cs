@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using CatalogTop.Models.Account;
 
-namespace CatalogTop.Models
+namespace CatalogTop.Models.Sort
 {
     public partial class SubUser
     {
