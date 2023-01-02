@@ -28,13 +28,11 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-  name: "areas",
-  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
 
 //TODO: сделать миграцию?
-//TODO: протестировать areas
+//TODO: протестировать areas -> Проблемы с общими файлами
+//TODO: система регистрации
