@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CatalogTop.Models
 {
-    public partial class DBContext : DbContext
+    public partial class CatalogDbContext : DbContext
     {
-        public DBContext()
+        public CatalogDbContext()
         {
         }
 
-        public DBContext(DbContextOptions<DBContext> options)
+        public CatalogDbContext(DbContextOptions<CatalogDbContext> options)
             : base(options)
         {
         }
@@ -34,7 +34,7 @@ namespace CatalogTop.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=localhost;Database=test;Username=postgres;Password=root");
+                optionsBuilder.UseNpgsql("Host=localhost;Database=test;Username=postgres;Password=****");
             }
         }
 

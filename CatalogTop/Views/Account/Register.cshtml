@@ -1,0 +1,45 @@
+﻿@using CatalogTop.ViewModels.Account;
+@model RegisterViewModel
+@{
+    ViewBag.Title = "Регистрация";
+}
+<section class="h-10 h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-10">
+            <div class="col-lg-8 col-xl-6">
+            <div class="card rounded-3 bg-light">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img3.webp"
+                         class="w-100" style="border-top-left-radius: .3rem; border-top-right-radius: .3rem;"
+                         alt="Sample photo">
+                    <div class="card-body p-4 p-md-5">
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Регистрация</h3>
+
+                        <form class="px-md-2" method="post" asp-antiforgery="true" asp-action="Register" asp-controller="Account">
+                            <div class="validation" asp-validation-summary="ModelOnly"></div>
+
+                            <div class="form-outline mb-4">
+                            <span class="text-danger" asp-validation-for="Email"></span>
+                                <input type="email" id="form3Example1q" class="form-control" asp-for="Email" />
+                                <label class="form-label" asp-for="Email">Почта</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <span calss="text-danger" asp-validation-for="Password"></span>
+                                <input type="password" id="form3Example1q" class="form-control" asp-for="Password" />
+                                <label class="form-label" for="form3Example1q" asp-for="Password">Пароль</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <span class="text-danger" asp-validation-for="PasswordConfirm"></span>
+                                <input type="password" id="form3Example1q" class="form-control" asp-for="PasswordConfirm" />
+                                <label class="form-label" asp-for="PasswordConfirm">Повторите пароль</label>
+                            </div>
+
+                            <button value="Register" type="submit" class="btn btn-success btn-lg mb-1">Зарегистрироваться</button>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
