@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Вход в аккаунт";
 }
+<p>@ViewBag.returnUrl</p>
 <section class="h-10 h-custom">
     <div class="row d-flex justify-content-center align-items-center h-10">
         <div class="col-lg-8 col-xl-6">
@@ -25,7 +26,7 @@
                             <span asp-validation-for="Password"></span>
                         </div>
 
-                        <button value="Login" type="submit" class="btn btn-success btn-lg mb-1">Войти</button>
+                        <button asp-action="Login" type="submit" class="btn btn-success btn-lg mb-1">Войти</button>
 
                     </form>
 

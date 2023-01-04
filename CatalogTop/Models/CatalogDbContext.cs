@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CatalogTop.Helpers;
 using CatalogTop.Models.Account;
 using CatalogTop.Models.Sort;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CatalogTop.Models
 {
@@ -236,8 +234,8 @@ namespace CatalogTop.Models
                     .IsUnique();
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Coin).HasColumnName("coin");
 

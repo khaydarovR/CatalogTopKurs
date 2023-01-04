@@ -1,8 +1,12 @@
 using CatalogTop.DAL;
+using CatalogTop.Helpers;
 using CatalogTop.Models;
 using CatalogTop.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Runtime.CompilerServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +16,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<CatalogDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("DBcontext")));
 
-builder.Services.AddAuthentication("Cookies")  // схема аутентификации - с помощью cookie
-    .AddCookie();
+// схема аутентификации - с помощью cookie
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).
+    AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, (conf)=> conf.LoginPath = "/Account/Login"); 
+builder.Services.AddAuthorization();
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IAccountService ,AccountService>(); // сервис для управления учетными записями (аккаунтами)
@@ -33,8 +39,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
@@ -42,9 +48,11 @@ app.MapControllerRoute(
 
 app.Run();
 
-//TODO: сделать миграцию?
-//TODO: протестировать areas -> Проблемы с общими файлами
-//TODO: система регистрации
+//TODO: Проверка регистрации, сохранение Id пользовател в claims
+//TODO: Выход из акк
+//TODO: 
 
 //ASK: Архитектура вообще правильная? правильно иду? что исправить?
 //ASK: Нужно ли в сервисы внедрять IUserRepository
+
+//Scaffold-DbContext "Host=localhost;Database=test;Username=postgres;Password=pas" Npgsql.EntityFrameworkCore.PostgreSQL -OutputDir Models2

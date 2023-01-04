@@ -5,6 +5,6 @@ namespace CatalogTop.Services
 {
     public interface IAccountService
     {
-        Task<string> RegisterAccount(RegisterViewModel registerViewModel);
+        Task RegisterAccount(RegisterViewModel registerViewModel);
     }
 }

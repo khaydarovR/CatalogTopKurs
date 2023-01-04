@@ -18,7 +18,7 @@ namespace CatalogTop.DAL
             return _context.Users.ToList();
         }
 
-        public User GetUserByID(int id)
+        public User GetUserByID(long id)
         {
             return _context.Users.Find(id);
         }
@@ -64,9 +64,9 @@ namespace CatalogTop.DAL
             GC.SuppressFinalize(this);
         }
 
-        public IEnumerable<User> GetUser()
+        async Task IUserRepository.InsertUserAsync(User user)
         {
-            throw new NotImplementedException();
+            await _context.Users.AddAsync(user);
         }
     }
 }
