@@ -7,9 +7,9 @@ namespace CatalogTop.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly CatalogDbContext _dbContext;
+        private readonly AppDbContext _dbContext;
 
-        public HomeController(ILogger<HomeController> logger, CatalogDbContext dbContext)
+        public HomeController(ILogger<HomeController> logger, AppDbContext dbContext)
         {
             _logger = logger;
             _dbContext = dbContext;

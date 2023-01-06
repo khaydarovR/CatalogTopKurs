@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using CatalogTop.Models.Account;
+﻿using CatalogTop.Models.Account;
 
 namespace CatalogTop.Models.Sort
 {

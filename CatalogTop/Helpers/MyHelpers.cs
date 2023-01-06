@@ -1,22 +1,23 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.DotNet.MSIdentity.Shared;
+using Newtonsoft.Json.Linq;
 using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 
 namespace CatalogTop.Helpers
 {
-    public static class HashHelper
+    public static class MyHelpers
     {
         static public string GetHashSaltString(string s)
         {
-            var _inputString = s;
+            byte[] salt = Encoding.ASCII.GetBytes("secretkey");
 
-            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8); // divide by 8 to convert bits to bytes
-
-            // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
             string HashString = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: _inputString!,
-                salt: salt,
+                password: s!,
+                salt: salt!,
                 prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
+                iterationCount: 10,
                 numBytesRequested: 256 / 8));
 
             return HashString;

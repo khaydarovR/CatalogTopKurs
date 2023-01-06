@@ -4,14 +4,14 @@
     ViewData["Title"] = "Account";
 }
 @model List<Claim>
-<a class="btn btn-outline-danger asp-area="" asp-controller="Account" asp-action="Logout">Выйти</a>
+
 <div class="text-center">
     <h1 class="display-4">You Account</h1>
     @foreach (var item in Model)
-{
-    @item.ToString();
-}
-
+    {
+        @item.ToString();
+    }
+    <a class="btn btn-outline-danger" asp-controller="Account" asp-action="Logout">Выйти</a>
 
 @*    <p>Email @Model.Email</p>
     <p>Password @Model.Password</p>

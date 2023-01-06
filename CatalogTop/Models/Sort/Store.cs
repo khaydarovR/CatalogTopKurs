@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CatalogTop.Models.Sort
+﻿namespace CatalogTop.Models.Sort
 {
     public partial class Store
     {
