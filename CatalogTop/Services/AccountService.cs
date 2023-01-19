@@ -42,8 +42,10 @@ namespace CatalogTop.Services
             long _id = _dBContext.Users.First(u => u.Email == user.Email).Id;
             var claims = new List<Claim>
             {
-                new Claim("status", user.Status),
-                new Claim("userId", user.Id.ToString())
+                new Claim("id", user.Id.ToString(), ClaimValueTypes.Integer),
+                new Claim(ClaimTypes.Role, user.Status),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Email)
             };
 
             var claimIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

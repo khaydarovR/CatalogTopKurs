@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace CatalogTop.Controllers
@@ -26,14 +27,14 @@ namespace CatalogTop.Controllers
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Claim> res = HttpContext.User.Claims.ToList();
-            //Сохранение -> его поиск -> сохранение в claims id пользователя
-            var test = HttpContext.User;
-            //User model = _userRepository.GetUserByID(0);
-            return View(res);
+            var _id = long.Parse(s: HttpContext.User.FindFirst("id").Value);
+            User model = await _dbContext.Users.FirstAsync(u => u.Id == _id);
+
+            return View(model);
         }
+
 
         [HttpGet]
         public IActionResult Register() => View();

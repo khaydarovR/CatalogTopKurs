@@ -3,19 +3,52 @@
 @{
     ViewData["Title"] = "Account";
 }
-@model List<Claim>
+@model User
 
 <div class="text-center">
-    <h1 class="display-4">You Account</h1>
-    @foreach (var item in Model)
-    {
-        @item.ToString();
-    }
-    <a class="btn btn-outline-danger" asp-controller="Account" asp-action="Logout">Выйти</a>
+    <h1 class="display-4">Ваш аккаунт</h1>
 
-@*    <p>Email @Model.Email</p>
-    <p>Password @Model.Password</p>
-    <p>Coin @Model.Coin</p>
-    <p>Status @Model.Status</p>
-    <p>Visit @Model.LastVisit</p>*@
+    <section class="h-100 gradient-custom-2">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-lg-9 col-xl-7">
+        <div class="card">
+          <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                <img src="https://i.pinimg.com/originals/09/cd/f0/09cdf0d63f5cf955d0179742722b19bf.jpg"
+                alt="Generic placeholder image" class="border img-fluid img-thumbnail mt-4 mb-2"
+                style="width: 150px; z-index: 1">
+              <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+                style="z-index: 1;">
+                Редактировать профиль
+              </button>
+            </div>
+            <div class="ms-3" style="margin-top: 130px;">
+              <h5>@Model.Email</h5>
+              <p>@Model.Status</p>
+            </div>
+          </div>
+          <div class="p-4 text-black" style="background-color: #f8f9fa;">
+            <div class="d-flex justify-content-end text-center py-1">
+              <div>
+                <p class="mb-1 h5">@Model.Coin</p>
+                <p class="small text-muted mb-0">Балы</p>
+              </div>
+              <div class="px-3">
+                <p class="mb-1 h5">@Model.LastVisit</p>
+                <p class="small text-muted mb-0">Последний визит</p>
+              </div>
+              <div>
+                <p class="mb-1 h5">@Model.Id</p>
+                <p class="small text-muted mb-0">ID</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+    
+    <a class="btn btn-outline-danger" asp-controller="Account" asp-action="Logout">Выйти</a>
 </div>
