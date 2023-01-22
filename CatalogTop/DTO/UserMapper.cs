@@ -1,7 +1,6 @@
 ﻿using CatalogTop.Helpers;
 using CatalogTop.Models.Account;
 using CatalogTop.ViewModels.Account;
-using System.Data;
 
 namespace CatalogTop.DTO
 {

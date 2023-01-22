@@ -40,7 +40,6 @@ app.MapControllerRoute(
 
 app.Run();
 
-//TODO: Login Controller
-//TODO: Add Claims?
+//TODO: Login - update last visit
 
 //Scaffold-DbContext "Host=localhost;Database=test;Username=postgres;Password=pas" Npgsql.EntityFrameworkCore.PostgreSQL -OutputDir Models2

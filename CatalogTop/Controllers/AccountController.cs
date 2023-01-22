@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace CatalogTop.Controllers
 {
@@ -52,7 +50,7 @@ namespace CatalogTop.Controllers
             {
                 res = await _accountService.RegisterAccount(model);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ModelState.AddModelError("Ошибка регистрации", e.Message);
                 return View(model);
@@ -64,12 +62,32 @@ namespace CatalogTop.Controllers
             return Redirect("/Account");
         }
 
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login(string returnUrl) => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
+            User res;
 
-            ViewBag.returnUrl = returnUrl;
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
-            return View();
+            try
+            {
+                res = await _accountService.Login(model);
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("Ошибка входа", e.Message);
+                return View(model);
+            }
+
+            var principal = _accountService.GetClaimsPrincipalDefault(res);
+            await HttpContext.SignInAsync(principal);
+
+            return Redirect("/Account");
         }
 
         public async Task<IActionResult> Logout()

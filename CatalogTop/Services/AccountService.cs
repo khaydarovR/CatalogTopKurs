@@ -1,10 +1,8 @@
-﻿using CatalogTop.Data;
-using CatalogTop.Models;
+﻿using CatalogTop.Models;
 using CatalogTop.Models.Account;
 using CatalogTop.ViewModels.Account;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 using System.Security.Claims;
 
 namespace CatalogTop.Services
@@ -32,12 +30,12 @@ namespace CatalogTop.Services
             await _dBContext.Users.AddAsync(newUser);
             _dBContext.SaveChanges();
 
-            
-            newUser = await _dBContext.Users.FirstAsync(u => u.Email==registerViewModel.Email);
+
+            newUser = await _dBContext.Users.FirstAsync(u => u.Email == registerViewModel.Email);
             return newUser;
         }
 
-        public ClaimsPrincipal GetClaimsPrincipalDefault (User user)
+        public ClaimsPrincipal GetClaimsPrincipalDefault(User user)
         {
             long _id = _dBContext.Users.First(u => u.Email == user.Email).Id;
             var claims = new List<Claim>
@@ -54,9 +52,23 @@ namespace CatalogTop.Services
             return claimPrincipal;
         }
 
-        public Task<User> Login(LoginViewModel loginViewModel)
+        public async Task<User> Login(LoginViewModel loginViewModel)
         {
-            throw new NotImplementedException();
+            var userDB = await _dBContext.Users.FirstOrDefaultAsync(u => u.Email == loginViewModel.Email);
+
+            if (userDB != null)
+            {
+                var hashPassword = Helpers.MyHelpers.GetHashSaltString(loginViewModel.Password);
+
+                if (hashPassword == userDB.Password)
+                {
+                    return userDB;
+                }
+
+                throw new Exception("Неверный пароль");
+            }
+            
+            throw new Exception("Пользователь под таким Email не существует");
         }
     }
 }
