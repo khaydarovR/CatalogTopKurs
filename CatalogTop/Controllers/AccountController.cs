@@ -1,6 +1,4 @@
-﻿using CatalogTop.DAL;
-using CatalogTop.Helpers;
-using CatalogTop.Models;
+﻿using CatalogTop.Models;
 using CatalogTop.Models.Account;
 using CatalogTop.Services;
 using CatalogTop.ViewModels.Account;
@@ -8,41 +6,33 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using NuGet.Protocol;
-using System;
-using System.Linq;
-using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogTop.Controllers
 {
     public class AccountController : Controller
     {
-        private CatalogDbContext _dbContext;
+        private AppDbContext _dbContext;
         private IAccountService _accountService;
-        private IUserRepository _userRepository;
 
 
         public AccountController(
-            CatalogDbContext dBContext,
-            IAccountService accountService,
-            IUserRepository userRepository) 
-            //ASK: Сам найдет нужную реализацию и зависемости? + внедрит нужные зависемости для самого userRepository я
+            AppDbContext dBContext,
+            IAccountService accountService)
         {
-            _dbContext= dBContext;
+            _dbContext = dBContext;
             _accountService = accountService;
-            _userRepository = userRepository;
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Claim> res = HttpContext.User.Claims.ToList();
-            //Сохранение -> его поиск -> сохранение в claims id пользователя
-            var test = HttpContext.User;
-            //User model = _userRepository.GetUserByID(0);
-            return View(res);
+            var _id = long.Parse(s: HttpContext.User.FindFirst("id").Value);
+            User model = await _dbContext.Users.FirstAsync(u => u.Id == _id);
+
+            return View(model);
         }
+
 
         [HttpGet]
         public IActionResult Register() => View();
@@ -50,31 +40,54 @@ namespace CatalogTop.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            User res;
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            await _accountService.RegisterAccount(model);
-
-
-            var claims = new List<Claim>
+            try
             {
-                new Claim("Status", Helpers.DbInit.GetEnumDescription(UserStatusEnum.NewUser))
-            };
+                res = await _accountService.RegisterAccount(model);
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("Ошибка регистрации", e.Message);
+                return View(model);
+            }
 
-            var claimIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme); 
-            var claimPrincipal = new ClaimsPrincipal(claimIdentity);
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal);
+            var principal = _accountService.GetClaimsPrincipalDefault(res);
+            await HttpContext.SignInAsync(principal);
 
             return Redirect("/Account");
         }
 
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login(string returnUrl) => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            ViewBag.returnUrl = returnUrl;
-            return View();
+            User res;
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                res = await _accountService.Login(model);
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("Ошибка входа", e.Message);
+                return View(model);
+            }
+
+            var principal = _accountService.GetClaimsPrincipalDefault(res);
+            await HttpContext.SignInAsync(principal);
+
+            return Redirect("/Account");
         }
 
         public async Task<IActionResult> Logout()

@@ -1,62 +1,74 @@
-﻿using CatalogTop.DAL;
-using CatalogTop.Helpers;
-using CatalogTop.Models;
+﻿using CatalogTop.Models;
 using CatalogTop.Models.Account;
 using CatalogTop.ViewModels.Account;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
+using System.Security.Claims;
+
 namespace CatalogTop.Services
 {
     public class AccountService : IAccountService
     {
-        private CatalogDbContext _dBContext;
-        private IUserRepository _userRepository;
-
-        //ASK: Так можно внедрять?
-        public AccountService(IUserRepository userRepository, CatalogDbContext dbContext) 
+        private AppDbContext _dBContext;
+        public AccountService(AppDbContext dbContext)
         {
             this._dBContext = dbContext;
-            this._userRepository = userRepository;
         }
 
-        //public Task<string> RegisterAccount(RegisterViewModel registerViewModel)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public async Task RegisterAccount(RegisterViewModel registerViewModel)
+        public async Task<User> RegisterAccount(RegisterViewModel registerViewModel)
         {
-            IEnumerable<User> users = _userRepository.GetUsers();
 
-            var haveThisEmail = users.Any(u => u.Email == registerViewModel.Email);
+            var haveThisEmail = _dBContext.Users.Any(u => u.Email == registerViewModel.Email);
 
-            if(haveThisEmail)
+            if (haveThisEmail)
             {
-                throw new Exception("This is Email has in DB");
+                throw new Exception("Такой Email уже существует");
             }
-            //mapper reggisterViewModel -> Model (User)
 
-            var newUser = new User() {
-                Email = registerViewModel.Email,
-                Password = registerViewModel.Password,
-                LastVisit = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day),
-                StatusNavigation = _dBContext.Statuses.Where(s => s.Title == "Новый пользователь").FirstOrDefault(),
-                Coin = 0
+            var newUser = DTO.UserMapper.UserMap(registerViewModel);
+
+            await _dBContext.Users.AddAsync(newUser);
+            _dBContext.SaveChanges();
+
+
+            newUser = await _dBContext.Users.FirstAsync(u => u.Email == registerViewModel.Email);
+            return newUser;
+        }
+
+        public ClaimsPrincipal GetClaimsPrincipalDefault(User user)
+        {
+            long _id = _dBContext.Users.First(u => u.Email == user.Email).Id;
+            var claims = new List<Claim>
+            {
+                new Claim("id", user.Id.ToString(), ClaimValueTypes.Integer),
+                new Claim(ClaimTypes.Role, user.Status),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Email)
             };
 
-            try
-            {
-                await _userRepository.InsertUserAsync(newUser);
-                _userRepository.Save();
-            }
-            catch (DataException)
-            {
-                throw new Exception("Error with saves in DB");
-            }
+            var claimIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimPrincipal = new ClaimsPrincipal(claimIdentity);
+
+            return claimPrincipal;
         }
 
-        //return Task<string>("ok");
-        //ASK: Для сохранения нового пользователя так??
-        //TODO: Спросить и доделать
+        public async Task<User> Login(LoginViewModel loginViewModel)
+        {
+            var userDB = await _dBContext.Users.FirstOrDefaultAsync(u => u.Email == loginViewModel.Email);
+
+            if (userDB != null)
+            {
+                var hashPassword = Helpers.MyHelpers.GetHashSaltString(loginViewModel.Password);
+
+                if (hashPassword == userDB.Password)
+                {
+                    return userDB;
+                }
+
+                throw new Exception("Неверный пароль");
+            }
+            
+            throw new Exception("Пользователь под таким Email не существует");
+        }
     }
 }

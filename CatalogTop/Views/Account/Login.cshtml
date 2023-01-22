@@ -1,5 +1,5 @@
 ﻿@using CatalogTop.ViewModels.Account;
-@model RegisterViewModel
+@model LoginViewModel
 @{
     ViewBag.Title = "Вход в аккаунт";
 }
@@ -12,18 +12,18 @@
                     <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Вход</h3>
 
                     <form class="px-md-2" method="post" asp-controller="Account" asp-action="Login">
-                        <div asp-validation-summary="ModelOnly"></div>
+                        <div class="validation" asp-validation-summary="All"></div>
 
                         <div class="form-outline mb-4">
-                            <input type="text" id="form3Example1q" class="form-control" asp-for="Email" />
-                            <label class="form-label" for="form3Example1q" asp-for="Email">Email</label>
-                            <span asp-validation-for="Email"></span>
+                            <span class="text-danger" asp-validation-for="Email"></span>
+                            <input type="email" id="form3Example1q" class="form-control" asp-for="Email" />
+                            <label class="form-label" asp-for="Email">Почта</label>
                         </div>
 
                         <div class="form-outline mb-4">
-                            <input type="text" id="form3Example1q" class="form-control" asp-for="Password" />
-                            <label class="form-label" for="form3Example1q" asp-for="Password">пароль</label>
-                            <span asp-validation-for="Password"></span>
+                            <span calss="text-danger" asp-validation-for="Password"></span>
+                            <input type="password" id="form3Example1q" class="form-control" asp-for="Password" />
+                            <label class="form-label" asp-for="Password">Пароль</label>
                         </div>
 
                         <button asp-action="Login" type="submit" class="btn btn-success btn-lg mb-1">Войти</button>

@@ -1,17 +1,16 @@
-﻿using CatalogTop.Helpers;
-using CatalogTop.Models.Account;
+﻿using CatalogTop.Models.Account;
 using CatalogTop.Models.Sort;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogTop.Models
 {
-    public partial class CatalogDbContext : DbContext
+    public partial class AppDbContext : DbContext
     {
-        public CatalogDbContext()
+        public AppDbContext()
         {
         }
 
-        public CatalogDbContext(DbContextOptions<CatalogDbContext> options)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
         }
@@ -19,7 +18,6 @@ namespace CatalogTop.Models
         public virtual DbSet<NumAtr> NumAtrs { get; set; } = null!;
         public virtual DbSet<PType> PTypes { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
-        public virtual DbSet<Status> Statuses { get; set; } = null!;
         public virtual DbSet<Store> Stores { get; set; } = null!;
         public virtual DbSet<StoreItem> StoreItems { get; set; } = null!;
         public virtual DbSet<StrAtr> StrAtrs { get; set; } = null!;
@@ -31,8 +29,8 @@ namespace CatalogTop.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=localhost;Database=test;Username=postgres;Password=****");
+                //To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseNpgsql("Host=localhost;Database=test;Username=postgres;Password=pas");
             }
         }
 
@@ -103,18 +101,6 @@ namespace CatalogTop.Models
                     .HasForeignKey(d => d.PType)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("product_p_type_fkey");
-            });
-
-            modelBuilder.Entity<Status>(entity =>
-            {
-                entity.HasKey(e => e.Title)
-                    .HasName("status_pkey");
-
-                entity.ToTable("status");
-
-                entity.Property(e => e.Title)
-                    .HasColumnType("character varying")
-                    .HasColumnName("title");
             });
 
             modelBuilder.Entity<Store>(entity =>
@@ -252,12 +238,6 @@ namespace CatalogTop.Models
                 entity.Property(e => e.Status)
                     .HasColumnType("character varying")
                     .HasColumnName("status");
-
-                entity.HasOne(d => d.StatusNavigation)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.Status)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("user_status_fkey");
             });
 
             OnModelCreatingPartial(modelBuilder);
